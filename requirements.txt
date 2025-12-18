@@ -6,6 +6,7 @@ flask
 
 # packages used for testing:
 pytest
+debugpy
 
 # packages used for production:
 gunicorn

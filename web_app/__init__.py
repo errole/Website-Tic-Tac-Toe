@@ -1,10 +1,22 @@
-from flask import Flask, render_template, request
+import os
 
+if __name__ == "__main__" and __package__ is None:
+    import sys
+
+    sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
+from flask import Flask, render_template, request
 from app.rps import determine_winner, generate_random_choice
 
-
-
 app = Flask(__name__)
+
+if os.getenv("DEBUGPY", "0") == "1" and os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+    import debugpy
+
+    debugpy.listen(("127.0.0.1", int(os.getenv("DEBUGPY_PORT", "8080"))))
+    if os.getenv("DEBUGPY_WAIT", "0") == "1":
+        debugpy.wait_for_client()
+
 
 # when someone visits the home page "/" in the browser,
 # trigger this "home" function, and return / display some value
@@ -20,7 +32,6 @@ def home():
 def about():
     #return "THIS IS THE ABOUT PAGE"
     return render_template("about.html")
-
 
 
 @app.route('/results', methods=['POST'])
@@ -40,6 +51,7 @@ def results():
         computer_choice=computer_choice,
         outcome=outcome
     )
+
 
 if __name__ == '__main__':
 
